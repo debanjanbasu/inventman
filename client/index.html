@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Inventman v1.0.1. Real-Time smart inventory Management and Prediction</title>
+    <meta name="description" content="Real-Time smart inventory Management and Prediction">
+    <meta name="author" content="Debanjan Basu">
+    <base href="/">
+    <!-- quick fix for base element -->
+    <script>
+    baseElement = document.querySelector('base');
+    baseElement.attr = baseElement.getAttribute;
+    </script>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.5/simplex/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <inventman-app>Loading...</inventman-app>
+    </div>
+    <!--Load AngularJS and the custome bootstrap.js-->
+    <script src="bower_components/traceur-runtime/traceur-runtime.min.js"></script>
+    <script src="jsts/lib/system@0.16.11.js"></script>
+    <script src="jsts/lib/angular2.dev.js"></script>
+    <script src="jsts/lib/router.dev.js"></script>
+    <script>
+    'use strict';
+    System.import('./jsts/components/app');
+    </script>
+    <!--Bootstrap-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</body>
+
+</html>

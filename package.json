@@ -1,0 +1,27 @@
+{
+    "name": "inventman",
+    "version": "1.0.1",
+    "description": "Real-Time smart inventory Management and Prediction",
+    "main": "server/server.js",
+    "author": "Debanjan Basu",
+    "scripts": {
+        "start": "node --harmony --harmony_generators server/server.js",
+        "updatets": "npm install -g typescript@next"
+    },
+    "dependencies": {
+        "body-parser": "latest",
+        "cluster": "latest",
+        "compression": "latest",
+        "express": "latest",
+        "mongoose": "latest",
+        "spdy": "latest",
+        "cors": "latest",
+        "bcrypt-nodejs": "latest",
+        "jsonwebtoken": "latest",
+        "express-jwt": "latest"
+    },
+    "license": "ISC",
+    "engines": {
+        "node": "^0.12.7"
+    }
+}

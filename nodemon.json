@@ -1,0 +1,9 @@
+{
+    "ignore": [
+        "node_modules/**/*",
+        "client/**/*"
+    ],
+    "execMap": {
+        "js": "node --harmony --harmony_generators"
+    }
+}

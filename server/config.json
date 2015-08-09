@@ -1,0 +1,5 @@
+{
+    "version": "1.0.1",
+    "dburl": "mongodb://localhost:27017/inventman",
+    "secret": "jhfsdjlhsdblajbsclajbsdclb3r546t345t234sdfjhvjhv"
+}
