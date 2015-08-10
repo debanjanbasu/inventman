@@ -12,10 +12,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component, View, bootstrap } from 'angular2/angular2';
-import { routerInjectables, RouterOutlet, RouteConfig } from 'angular2/router';
+import { routerInjectables, RouteConfig } from 'angular2/router';
 import { LoginApp } from './login/login';
 import { DashboardApp } from './dashboard/dashboard';
-export let InventmanApp = class {
+import { LoggedInRouterOutlet } from './LoggedInRouterOutlet';
+let InventmanApp = class {
     constructor() {
     }
 };
@@ -26,7 +27,7 @@ InventmanApp = __decorate([
     View({
         template: `<!-- The router-outlet displays the template for the current component based on the URL -->
     <router-outlet></router-outlet>`,
-        directives: [RouterOutlet]
+        directives: [LoggedInRouterOutlet]
     }),
     RouteConfig([
         { path: '/', redirectTo: '/login' },

@@ -5,6 +5,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
-        "listFiles": true
+        "listFiles": true,
+        "watch": true
     }
 }

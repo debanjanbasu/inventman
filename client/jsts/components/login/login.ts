@@ -1,6 +1,6 @@
 /// <reference path="../../typings/angular2/angular2.d.ts" />
 'use strict';
-import {Component, View, formDirectives} from 'angular2/angular2';
+import {Component, View, formDirectives, Inject} from 'angular2/angular2';
 import {Router} from 'angular2/router';
 import {HttpService} from '../../services/httpservice/httpservice';
 @Component({

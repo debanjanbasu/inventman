@@ -45,6 +45,6 @@ LoginApp = __decorate([
         directives: [formDirectives],
         styleUrls: ['./jsts/components/login/login.css']
     }), 
-    __metadata('design:paramtypes', [])
+    __metadata('design:paramtypes', [Router])
 ], LoginApp);
 //# sourceMappingURL=login.js.map
