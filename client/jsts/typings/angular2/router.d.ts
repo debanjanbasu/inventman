@@ -1,4 +1,4 @@
-// Type definitions for Angular v2.0.0-alpha.34
+// Type definitions for Angular v2.0.0-alpha.36
 // Project: http://angular.io/
 // Definitions by: angular team <https://github.com/angular/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
@@ -8,7 +8,13 @@
 // Please do not create manual edits or send pull requests
 // modifying this file.
 // ***********************************************************
+
+// angular2/router depends transitively on these libraries.
+// If you don't have them installed you can install them using TSD
+// https://github.com/DefinitelyTyped/tsd
+
 ///<reference path="./angular2.d.ts"/>
+
 
 
 
@@ -17,7 +23,7 @@
  * @description
  * Maps application URLs into application states, to support deep-linking and navigation.
  */
-declare module ng {
+declare module ngRouter {
 
   /**
    * # Router
@@ -88,6 +94,13 @@ declare module ng {
     
 
     /**
+     * Navigate via the provided instruction. Returns a promise that resolves when navigation is
+     * complete.
+     */
+     navigateInstruction(instruction: Instruction, _skipLocationChange?: boolean): Promise<any>;
+    
+
+    /**
      * Updates this router and all descendant routers according to the given instruction
      */
      commit(instruction: Instruction, _skipLocationChange?: boolean): Promise<any>;
@@ -96,7 +109,7 @@ declare module ng {
     /**
      * Subscribe to URL updates from the router
      */
-     subscribe(onNext: (value: any) => void): void;
+     subscribe(onNext: (value: any) => void): Object;
     
 
     /**
@@ -122,7 +135,7 @@ declare module ng {
      * Generate a URL from a component name and optional map of parameters. The URL is relative to the
      * app's base href.
      */
-     generate(linkParams: List<any>): string;
+     generate(linkParams: List<any>): Instruction;
   }
   
   class RootRouter extends Router {
@@ -143,6 +156,8 @@ declare module ng {
   class RouterOutlet {
     
      childRouter: Router;
+    
+     name: string;
     
 
     /**
@@ -199,7 +214,7 @@ declare module ng {
     
      visibleHref: string;
     
-     routeParams: void;
+     routeParams: any;
     
      onClick(): boolean;
   }
@@ -223,13 +238,13 @@ declare module ng {
     /**
      * Given a component and a configuration object, add the route to this registry
      */
-     config(parentComponent: any, config: RouteDefinition, isRootLevelRoute?: boolean): void;
+     config(parentComponent: any, config: RouteDefinition): void;
     
 
     /**
      * Reads the annotations of a component and configures the registry based on them
      */
-     configFromComponent(component: any, isRootComponent?: boolean): void;
+     configFromComponent(component: any): void;
     
 
     /**
@@ -243,7 +258,7 @@ declare module ng {
      * Given a normalized list with component names and params like: `['user', {id: 3 }]`
      * generates a url with a leading slash relative to the provided `parentComponent`.
      */
-     generate(linkParams: List<any>, parentComponent: any): string;
+     generate(linkParams: List<any>, parentComponent: any): Instruction;
   }
   
   class LocationStrategy {
@@ -276,7 +291,7 @@ declare module ng {
      back(): void;
   }
   
-  class HTML5LocationStrategy extends LocationStrategy {
+  class PathLocationStrategy extends LocationStrategy {
     
      onPopState(fn: EventListener): void;
     
@@ -319,7 +334,7 @@ declare module ng {
      subscribe(onNext: (value: any) => void, onThrow?: (exception: any) => void, onReturn?: () => void): void;
   }
   
-  const appBaseHrefToken : OpaqueToken ;
+  const APP_BASE_HREF : OpaqueToken ;
   
 
   /**
@@ -335,77 +350,259 @@ declare module ng {
   
 
   /**
-   * Defines route lifecycle method [onActivate]
+   * Defines route lifecycle method [onActivate], which is called by the router at the end of a
+   * successful route navigation.
+   * 
+   * For a single component's navigation, only one of either [onActivate] or [onReuse] will be called,
+   * depending on the result of [canReuse].
+   * 
+   * If `onActivate` returns a promise, the route change will wait until the promise settles to
+   * instantiate and activate child components.
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'my-cmp'
+   * })
+   * class MyCmp implements OnActivate {
+   *   onActivate(next, prev) {
+   *     this.log = 'Finished navigating from ' + prev.urlPath + ' to ' + next.urlPath;
+   *   }
+   * }
+   *  ```
    */
   interface OnActivate {
     
-     onActivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+     onActivate(nextInstruction: ComponentInstruction, prevInstruction: ComponentInstruction): any;
   }
   
 
   /**
-   * Defines route lifecycle method [onDeactivate]
+   * Defines route lifecycle method [onDeactivate], which is called by the router before destroying
+   * a component as part of a route change.
+   * 
+   * If `onDeactivate` returns a promise, the route change will wait until the promise settles.
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'my-cmp'
+   * })
+   * class MyCmp implements CanReuse, OnReuse {
+   *   canReuse() {
+   *     return true;
+   *   }
+   * 
+   *   onReuse(next, prev) {
+   *     this.params = next.params;
+   *   }
+   * }
+   *  ```
    */
   interface OnDeactivate {
     
-     onDeactivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+     onDeactivate(nextInstruction: ComponentInstruction, prevInstruction: ComponentInstruction): any;
   }
   
 
   /**
-   * Defines route lifecycle method [onReuse]
+   * Defines route lifecycle method [onReuse], which is called by the router at the end of a
+   * successful route navigation when [canReuse] is implemented and returns or resolves to true.
+   * 
+   * For a single component's navigation, only one of either [onActivate] or [onReuse] will be called,
+   * depending on the result of [canReuse].
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'my-cmp'
+   * })
+   * class MyCmp implements CanReuse, OnReuse {
+   *   canReuse() {
+   *     return true;
+   *   }
+   * 
+   *   onReuse(next, prev) {
+   *     this.params = next.params;
+   *   }
+   * }
+   *  ```
    */
   interface OnReuse {
     
-     onReuse(nextInstruction: Instruction, prevInstruction: Instruction): any;
+     onReuse(nextInstruction: ComponentInstruction, prevInstruction: ComponentInstruction): any;
   }
   
 
   /**
-   * Defines route lifecycle method [canDeactivate]
+   * Defines route lifecycle method [canDeactivate], which is called by the router to determine
+   * if a component can be removed as part of a navigation.
+   * 
+   * If `canDeactivate` returns or resolves to `false`, the navigation is cancelled.
+   * 
+   * If `canDeactivate` throws or rejects, the navigation is also cancelled.
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'my-cmp'
+   * })
+   * class MyCmp implements CanDeactivate {
+   *   canDeactivate(next, prev) {
+   *     return askUserIfTheyAreSureTheyWantToQuit();
+   *   }
+   * }
+   *  ```
    */
   interface CanDeactivate {
     
-     canDeactivate(nextInstruction: Instruction, prevInstruction: Instruction): any;
+     canDeactivate(nextInstruction: ComponentInstruction, prevInstruction: ComponentInstruction): any;
   }
   
 
   /**
-   * Defines route lifecycle method [canReuse]
+   * Defines route lifecycle method [canReuse], which is called by the router to determine whether a
+   * component should be reused across routes, or whether to destroy and instantiate a new component.
+   * 
+   * If `canReuse` returns or resolves to `true`, the component instance will be reused.
+   * 
+   * If `canReuse` throws or rejects, the navigation will be cancelled.
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'my-cmp'
+   * })
+   * class MyCmp implements CanReuse, OnReuse {
+   *   canReuse(next, prev) {
+   *     return next.params.id == prev.params.id;
+   *   }
+   * 
+   *   onReuse(next, prev) {
+   *     this.id = next.params.id;
+   *   }
+   * }
+   *  ```
    */
   interface CanReuse {
     
-     canReuse(nextInstruction: Instruction, prevInstruction: Instruction): any;
+     canReuse(nextInstruction: ComponentInstruction, prevInstruction: ComponentInstruction): any;
   }
-  
-  var CanActivate : (hook: (next: Instruction, prev: Instruction) => Promise<boolean>| boolean) => ClassDecorator ;
   
 
   /**
-   * An `Instruction` represents the component hierarchy of the application based on a given route
+   * Defines route lifecycle method [canActivate], which is called by the router to determine
+   * if a component can be instantiated as part of a navigation.
+   * 
+   * Note that unlike other lifecycle hooks, this one uses an annotation rather than an interface.
+   * This is because [canActivate] is called before the component is instantiated.
+   * 
+   * If `canActivate` returns or resolves to `false`, the navigation is cancelled.
+   * 
+   * If `canActivate` throws or rejects, the navigation is also cancelled.
+   * 
+   * ## Example
+   * ```
+   * @Directive({
+   *   selector: 'control-panel-cmp'
+   * })
+   * @CanActivate(() => checkIfUserIsLoggedIn())
+   * class ControlPanelCmp {
+   *   // ...
+   * }
+   *  ```
+   */
+  var CanActivate : (hook: (next: ComponentInstruction, prev: ComponentInstruction) => Promise<boolean>| boolean) =>
+        ClassDecorator ;
+  
+
+  /**
+   * `Instruction` is a tree of `ComponentInstructions`, with all the information needed
+   * to transition each component in the app to a given route, including all auxiliary routes.
+   * 
+   * This is a public API.
    */
   class Instruction {
     
-     accumulatedUrl: string;
-    
-     reuse: boolean;
-    
-     specificity: number;
-    
-     component: any;
-    
-     capturedUrl: string;
+     component: ComponentInstruction;
     
      child: Instruction;
     
-     params(): StringMap<string, string>;
+     auxInstruction: StringMap<string, Instruction>;
+    
+     replaceChild(child: Instruction): Instruction;
   }
   
-  const routerDirectives : List<any> ;
+
+  /**
+   * A `ComponentInstruction` represents the route state for a single component. An `Instruction` is
+   * composed of a tree of these `ComponentInstruction`s.
+   * 
+   * `ComponentInstructions` is a public API. Instances of `ComponentInstruction` are passed
+   * to route lifecycle hooks, like {@link CanActivate}.
+   */
+  class ComponentInstruction {
+    
+     reuse: boolean;
+    
+     urlPath: string;
+    
+     urlParams: List<string>;
+    
+     params: StringMap<string, any>;
+    
+     componentType: any;
+    
+     resolveComponentType(): Promise<Type>;
+    
+     specificity: any;
+    
+     terminal: any;
+    
+     routeData(): Object;
+  }
   
-  var routerInjectables : List<any> ;
+  class Url {
+    
+     path: string;
+    
+     child: Url;
+    
+     auxiliary: List<Url>;
+    
+     params: StringMap<string, any>;
+    
+     toString(): string;
+    
+     segmentToString(): string;
+  }
+  
+  class OpaqueToken {
+    
+     toString(): string;
+  }
+  
+
+  /**
+   * Runtime representation of a type.
+   * 
+   * In JavaScript a Type is a constructor function.
+   */
+  interface Type extends Function {
+    
+     new(args: any): any;
+  
+  }
+  
+  const ROUTE_DATA : OpaqueToken ;
+  
+  const ROUTER_DIRECTIVES : List<any> ;
+  
+  const ROUTER_BINDINGS : List<any> ;
   
   class Route implements RouteDefinition {
+    
+     data: any;
     
      path: string;
     
@@ -425,9 +622,30 @@ declare module ng {
      redirectTo: string;
     
      as: string;
+    
+     loader: Function;
+    
+     data: any;
+  }
+  
+  class AuxRoute implements RouteDefinition {
+    
+     data: any;
+    
+     path: string;
+    
+     component: Type;
+    
+     as: string;
+    
+     loader: Function;
+    
+     redirectTo: string;
   }
   
   class AsyncRoute implements RouteDefinition {
+    
+     data: any;
     
      path: string;
     
@@ -447,6 +665,8 @@ declare module ng {
      redirectTo?: string;
     
      as?: string;
+    
+     data?: any;
   }
   
   var RouteConfig : (configs: List<RouteDefinition>) => ClassDecorator ;
@@ -463,7 +683,7 @@ declare module ng {
 }
 
 declare module "angular2/router" {
-  export = ng;
+  export = ngRouter;
 }
 
 

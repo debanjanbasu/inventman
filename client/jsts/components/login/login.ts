@@ -1,40 +1,45 @@
 /// <reference path="../../typings/angular2/angular2.d.ts" />
 'use strict';
-import {Component, View, formDirectives, Inject} from 'angular2/angular2';
+import {Component, View, FORM_DIRECTIVES} from 'angular2/angular2';
 import {Router} from 'angular2/router';
-import {HttpService} from '../../services/httpservice/httpservice';
 @Component({
 	selector: 'login-app'
 })
 @View({
 	templateUrl: './jsts/components/login/login.html',
-	directives: [formDirectives],
+	directives: [FORM_DIRECTIVES],
 	styleUrls: ['./jsts/components/login/login.css']
 })
 export class LoginApp {
 	username: String;
 	password: String;
 	constructor(public router: Router) {
+		Waves.attach('.button', ['waves-button']);
+		Waves.init();
 	}
 	onSubmit() {
-		const username = this.username, password = this.password;
-		HttpService.serve('https://' + location.host + '/userapi/sessions/create', 'POST', {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		}, JSON.stringify({ username, password }))
-			.then(response=> {
-				if (!response.id_token) {
-					// Alerts the actual message received from the server
-					alert(response.message);
-					// Removes any previous assigned JWT to ensure tighter security
-					localStorage.removeItem('jwt');
-				}
-				else {
-					// Valid Login attempt -> Assign a jwt to the localStorage
-					localStorage.setItem('jwt', response.id_token);
-					// route to the dashboard
-					this.router.parent.navigate('/dashboard');
-				}
-			});
+		// request using the fetch api as it is a part of new es6
+		window.fetch('https://' + location.host + '/userapi/sessions/create', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ username: this.username, password: this.password })
+		}).then(response => {
+			// convert to JSON
+			return response.json();
+		}).then(json => {
+			if (json.message) {
+				alert(json.message);
+			} else if (json.id_token) {
+				// store the jwt
+				localStorage.setItem('jwt', json.id_token);
+				// navigate to the dashboard
+				this.router.navigate('/dashboard');
+			}
+		}).catch(error=> {
+			console.log(error.message);
+		});
 	}
 }

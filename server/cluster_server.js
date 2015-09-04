@@ -1,7 +1,8 @@
 'use strict';
-const cluster = require('cluster');
+const cluster = require('cluster'),
+    http = require(('http'));
 
-exports.startCluster = (app, server) => {
+exports.startCluster = (server) => {
     // Code to run if we're in the master process
     if (cluster.isMaster) {
 
@@ -14,7 +15,7 @@ exports.startCluster = (app, server) => {
         }
 
         // Listen for dying workers
-        cluster.on('exit', function (worker) {
+        cluster.on('exit', function(worker) {
 
             // Replace the dead worker, we're not sentimental
             console.log('Worker ' + worker.id + ' died :(');
@@ -24,12 +25,16 @@ exports.startCluster = (app, server) => {
 
         // Code to run if we're in a worker process
     } else {
-
+        // create a tiny http redirect server
+        http.createServer((req, res) => {
+            res.writeHead(301, {
+                "Location": "https://" + req.headers['host'] + req.url
+            });
+            res.end();
+        }).listen(80);
         // Bind to ports port
-        app.listen(80);
-        console.log('Redirect server listening on port 80');
         server.listen(443);
-        console.log('SPDY server listening on port 443');
+        console.log('H2/SPDY server listening on port 443 and redirect server on 80');
 
         console.log('Worker ' + cluster.worker.id + ' running!');
     }

@@ -1,18 +1,18 @@
 {
-  "name": "inventman",
-  "version": "1.0.1",
-  "main": "server/server.js",
-  "authors": [
-    "Debanjan Basu"
-  ],
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
-  "dependencies": {
-    "traceur-runtime": "latest"
-  }
+    "name": "inventman",
+    "version": "1.0.1",
+    "main": "server/server.js",
+    "authors": [
+        "Debanjan Basu"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "traceur-runtime": "latest"
+    }
 }

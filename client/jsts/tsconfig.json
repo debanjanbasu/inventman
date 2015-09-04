@@ -1,11 +1,13 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es5",
+        "module": "commonjs",
         "removeComments": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "sourceMap": true,
         "listFiles": true,
-        "watch": true
+        "watch": true,
+        "preserveConstEnums": false
     }
 }

@@ -9,18 +9,20 @@
         "updatets": "npm install -g typescript@next"
     },
     "dependencies": {
+        "bcrypt-nodejs": "latest",
         "body-parser": "latest",
         "cluster": "latest",
         "compression": "latest",
-        "express": "latest",
-        "mongoose": "latest",
-        "spdy": "latest",
         "cors": "latest",
-        "bcrypt-nodejs": "latest",
+        "express": "latest",
+        "express-jwt": "latest",
         "jsonwebtoken": "latest",
-        "express-jwt": "latest"
+        "mongoose": "latest",
+        "node-fetch": "latest",
+        "spdy": "latest"
     },
-    "license": "ISC",
+    "license": "UNLICENSED",
+    "private": true,
     "engines": {
         "node": "^0.12.7"
     }

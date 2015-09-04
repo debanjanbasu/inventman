@@ -4,6 +4,6 @@
         "client/**/*"
     ],
     "execMap": {
-        "js": "node --harmony --harmony_generators"
+        "js": "node --harmony"
     }
 }

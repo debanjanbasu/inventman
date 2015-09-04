@@ -4,40 +4,30 @@ const userApiRouter = require('express').Router(),
     config = require('../config.json'),
     jwt = require('jsonwebtoken');
 
-// configure the routes
-userApiRouter.route('/user')
-    .post((req, res) => {
-        const user = new User({
-            username: req.body.username,
-            password: req.body.password
-        });
+// configure the routes for Creating a User
+// userApiRouter.route('/user')
+//     .post((req, res) => {
+//         const user = new User({
+//             username: req.body.username,
+//             password: req.body.password
+//         });
 
-        user.save(err => {
-            if (err) {
-                res.send(err);
-            }
-            res.json({
-                message: 'New user added to the inventman app!'
-            });
-        });
-    });
-// return all users
-userApiRouter.route('/users')
-    .get((req, res) => {
-        User.find((err, users) => {
-            if (err) {
-                res.send(err);
-            }
-            res.json(users);
-        });
-    });
+//         user.save(err => {
+//             if (err) {
+//                 res.send(err);
+//             }
+//             res.json({
+//                 message: 'New user added to the inventman app!'
+//             });
+//         });
+//     });
 
 function createToken(user) {
     return jwt.sign({
         username: user.username
     }, config.secret, {
-        // 5 hours of expiry time for the token
-        expiresInMinutes: 60 * 5
+        // 24x7x365 hours of expiry time for the token
+        expiresInMinutes: 60 * 24 * 365
     });
 }
 // returns a jwt for the user signup
@@ -50,7 +40,7 @@ userApiRouter.route('/sessions/create')
                 res.send(err);
             }
             // No user found with that username
-            if (!user) {
+            else if (!user) {
                 res.json({
                     message: 'no user with that username exist!'
                 });
@@ -60,17 +50,17 @@ userApiRouter.route('/sessions/create')
                     if (err) {
                         res.send(err);
                     }
-
                     // Password did not match
-                    if (!isMatch) {
+                    else if (!isMatch) {
                         res.json({
                             message: 'password does not match with the provided username!'
                         });
+                    } else {
+                        // Success
+                        res.status(201).send({
+                            id_token: createToken(user)
+                        });
                     }
-                    // Success
-                    res.status(201).send({
-                        id_token: createToken(user)
-                    });
                 });
             }
         });

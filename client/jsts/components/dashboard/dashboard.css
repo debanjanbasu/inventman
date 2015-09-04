@@ -1,0 +1,9 @@
+#dashboard-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+}
+
+#dashboard-nav ul li {
+    display: inline-block;
+}

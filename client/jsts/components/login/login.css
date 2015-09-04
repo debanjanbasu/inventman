@@ -1,3 +1,25 @@
-h2 {
-    text-align: center;
+#signin-form {
+    max-width: 270px;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+#signin-form div + div {
+    margin-top: 0.8em;
+}
+
+#signin-form label {
+    /* To make sure that all labels have the same size and are properly aligned */
+    display: inline-block;
+    width: 108px;
+    text-align: right;
+}
+
+#signin-form h4 {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+#signin-form input {
+    min-width: 158px;
 }

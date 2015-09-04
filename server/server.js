@@ -24,18 +24,19 @@ mongoose.connect(config.dburl);
 const spdy_options = {
     key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
     cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
-    // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-    autoSpdy31: true
-};
+    // **optional** SPDY-specific options
+    spdy: {
+        protocols: ['h2', 'spdy/3.1'],
+        plain: false,
+        connection: {
+            windowSize: 1024 * 1024, // Server's window size
 
-// create the http redirect server
-app.use((req, res, next) => {
-    if (!req.secure) {
-        res.redirect(301, 'https://' + req.headers['host'] + req.path);
-    } else {
-        next();
+            // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
+            autoSpdy31: true,
+            maxStreams: 1024
+        }
     }
-});
+};
 
 // set express options
 app.disable('x-powered-by');
@@ -90,4 +91,4 @@ app.use((error, req, res, next) => {
 const server = spdy.createServer(spdy_options, app);
 
 // pass the servers to cluster master to handle the rest
-cluster_master.startCluster(app, server);
+cluster_master.startCluster(server);
