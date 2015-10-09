@@ -1,14 +1,19 @@
 * {
-    font-family: 'Roboto Condensed', sans-serif;
-    font-size: 14px;
+    font-family: "San Francisco", "Helvetica Neue", "Lucida Grande";
+    font-size: 12px;
     list-style: none;
     text-decoration: none;
-    color: black;
+    color: #000;
     border: 0;
     margin: 0;
     padding: 0;
+    transition: all 0.2s ease;
+    outline: none;
 }
 
-button {
-    padding: 5px 10px;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
 }

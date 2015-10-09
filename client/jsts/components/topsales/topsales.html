@@ -1,0 +1,9 @@
+<div class="topsales-container">
+    <topsales-pi [data]="graphData"></topsales-pi>
+    <select (change)="selectPeriod($event.target.value)">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="annually">Annually</option>
+        <option value="max" selected="selected">MAX</option>
+    </select>
+</div>

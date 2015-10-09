@@ -24,24 +24,29 @@ var InventmanApp = (function () {
             window.fetch('https://' + location.host + '/inventmanapi/me', {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
+                    'Accept': 'text/plain',
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + jwt
                 }
             }).then(function (response) {
-                return response.json();
-            }).then(function (json) {
-                if (json.username) {
-                    _this.router.navigate('/dashboard');
+                return response.text();
+            }).then(function (message) {
+                if (message == "success") {
+                    _this.router.navigateByUrl('/dashboard');
+                }
+                else {
+                    console.log(message);
+                    localStorage.removeItem('jwt');
+                    _this.router.navigateByUrl('/login');
                 }
             }).catch(function (error) {
                 console.log(error.message);
                 localStorage.removeItem('jwt');
-                _this.router.navigate('/login');
+                _this.router.navigateByUrl('/login');
             });
         }
         else {
-            this.router.navigate('/login');
+            this.router.navigateByUrl('/login');
             localStorage.removeItem('jwt');
         }
     }
@@ -50,17 +55,19 @@ var InventmanApp = (function () {
             selector: 'inventman-app'
         }),
         angular2_1.View({
-            template: "<!-- The router-outlet displays the template for the current component based on the URL -->\n    <router-outlet></router-outlet>",
-            directives: [router_1.RouterOutlet]
+            template: '<router-outlet></router-outlet>',
+            directives: [router_1.ROUTER_DIRECTIVES]
         }),
         router_1.RouteConfig([
-            { path: '/dashboard', as: 'dashboard-app', component: dashboard_1.DashboardApp },
-            { path: '/login', as: 'login-app', component: login_1.LoginApp }
+            { path: '/dashboard', as: 'DashboardCmp', component: dashboard_1.DashboardApp },
+            { path: '/login', as: 'LoginCmp', component: login_1.LoginApp }
         ]), 
         __metadata('design:paramtypes', [router_1.Router])
     ], InventmanApp);
     return InventmanApp;
 })();
 angular2_1.bootstrap(InventmanApp, [
-    router_1.ROUTER_BINDINGS]);
+    router_1.routerBindings(InventmanApp),
+    angular2_1.bind(router_1.LocationStrategy).toClass(router_1.PathLocationStrategy),
+    angular2_1.bind(router_1.APP_BASE_HREF).toValue('/')]);
 //# sourceMappingURL=app.js.map

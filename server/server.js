@@ -1,26 +1,16 @@
 'use strict';
-const express = require('express'),
-    app = express(),
+const app = require('koa')(),
+    compress = require('koa-compress'),
     spdy = require('spdy'),
-    compression = require('compression'),
-    mongoose = require('mongoose'),
-    bodyParser = require('body-parser'),
-    cors = require('cors'),
-    config = require('./config.json'),
-    cluster_master = require('./cluster_server'),
-    userApiRouter = require('./controllers/userapirouter'),
-    inventmanApiRouter = require('./controllers/protectedinventmanapirouter'),
-    jwt = require('express-jwt'),
-    fs = require('fs');
-
-// set environment as production
-process.env.NODE_ENV = 'production';
-
-// connect to inventman MongoDB Database
-mongoose.connect(config.dburl);
-
-// create the options for spdy
-// create the spdy server
+    fs = require('fs'),
+    http = require('http'),
+    cluster = require('cluster'),
+    redirectRouter = require('./controllers/redirectrouter'),
+    userapiRouter = require('./controllers/userapirouter'),
+    inventmanapiRouter = require('./controllers/inventmanapirouter');
+// enable local insecure SSL
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+// create the HTTP2 SPDY options
 const spdy_options = {
     key: fs.readFileSync(__dirname + '/keys/spdy-key.pem'),
     cert: fs.readFileSync(__dirname + '/keys/spdy-cert.pem'),
@@ -37,58 +27,56 @@ const spdy_options = {
         }
     }
 };
-
-// set express options
-app.disable('x-powered-by');
-
-// use compression to gZip all responses
-app.use(compression({
-    threshold: 0,
-    level: 9,
-    memLevel: 9
+// enable CORS
+app.use(require('koa-cors')());
+// initialize the compression middleware
+app.use(compress({
+    threshold: 0, // compress everything
+    flush: require('zlib').Z_SYNC_FLUSH,
+    level: require('zlib').Z_BEST_COMPRESSION
 }));
-
-// use body parser so we can grab information from POST requests
-app.use(bodyParser.urlencoded({
-    extended: true
+// initialize the static client server from the client root folder
+app.use(require('koa-static')('./client', {
+    maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
+    index: 'index.html',
+    defer: true
 }));
-app.use(bodyParser.json());
+// enable the bodyparser
+app.use(require('koa-bodyparser')());
+// use the redirect router due to defer this might be called first
+app.use(redirectRouter.routes())
+    .use(redirectRouter.allowedMethods());
+// the user API Router
+app.use(userapiRouter.routes())
+    .use(userapiRouter.allowedMethods());
+// protected middleware
+app.use(inventmanapiRouter.routes())
+    .use(inventmanapiRouter.allowedMethods());
 
-// configure our app to handle CORS requests
-app.options('*', cors());
-app.use(cors());
-
-// static route
-app.use(express.static('client', {
-    dotfiles: 'ignore',
-    maxAge: 365 * 24 * 60 * 60 * 1000, //one year in milliseconds
-    index: 'index.html'
-}));
-
-// routes for the inventmanApi
-// This is where all working api routers are getting intialized
-app.use('/userapi', userApiRouter);
-// dashboard and login redirect router
-app.get(['/dashboard', '/login'], (req, res) => {
-    res.redirect(301, 'https://' + req.headers['host']);
-});
-// protected inventman api router using express-jwt middleware
-app.use('/inventmanapi', jwt({
-    secret: config.secret
-}), inventmanApiRouter);
-
-// Handle 404
-app.use((req, res) => {
-    res.status(404).send();
-});
-
-// Handle 500
-app.use((error, req, res, next) => {
-    res.status(500).send();
-});
-
-// combine the spdy and express server
-const server = spdy.createServer(spdy_options, app);
-
-// pass the servers to cluster master to handle the rest
-cluster_master.startCluster(server);
+// create a cluster server with auto failsafe
+// Code to run if we're in the master process
+if (cluster.isMaster) {
+    // Count the machine's CPUs and create a worker for each CPU
+    for (let i of require('os').cpus()) {
+        cluster.fork();
+    }
+    // Listen for dying workers
+    cluster.on('exit', worker => {
+        // Replace the dead worker, we're not sentimental
+        console.log('Worker ' + worker.id + ' died :(');
+        cluster.fork();
+    });
+    // Code to run if we're in a worker process
+} else {
+    // create a tiny http redirect server
+    http.createServer((req, res) => {
+        res.writeHead(301, {
+            "Location": "https://" + req.headers['host'] + req.url
+        });
+        res.end();
+    }).listen(80);
+    // initialize the http2 / spdy server
+    spdy.createServer(spdy_options, app.callback()).listen(443);
+    console.log('H2/SPDY server listening on port 443 and redirect server on 80');
+    console.log('Worker ' + cluster.worker.id + ' running!');
+}

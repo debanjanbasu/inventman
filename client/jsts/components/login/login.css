@@ -1,25 +1,38 @@
+button,
+button i {
+    color: #fff
+}
+
 #signin-form {
-    max-width: 270px;
-    margin: 0 auto;
-    margin-top: 40px;
+    width: 240px;
+    margin: 200px auto
 }
 
-#signin-form div + div {
-    margin-top: 0.8em;
+#signin-form span {
+    width: 100%;
 }
 
-#signin-form label {
-    /* To make sure that all labels have the same size and are properly aligned */
+#signin-form span input {
     display: inline-block;
-    width: 108px;
-    text-align: right;
+    width: 95%;
+    float: right;
+    text-align: center;
 }
 
 #signin-form h4 {
-    text-align: right;
-    margin-bottom: 10px;
+    text-align: right
 }
 
-#signin-form input {
-    min-width: 158px;
+button {
+    padding: 5px 10px;
+    background-color: #551A8B
+}
+
+button:disabled {
+    color: #000;
+    opacity: .7
+}
+
+button:disabled i {
+    color: #000
 }

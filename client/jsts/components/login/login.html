@@ -1,12 +1,14 @@
 <form (ng-submit)="onSubmit()" #f="form" id="signin-form">
-    <h4>Login into Inventman v1.0.1</h4>
+    <h4>Login into Inventman v1.0.2</h4>
     <div>
         <label for="usernameInput" form="signin-form">E-mail / Username</label>
-        <input type="email" placeholder="Please enter your username" id="usernameInput" ng-control="username" [(ng-model)]="username" required autofocus>
+        <br>
+        <span><i class="fa fa-user"></i> <input type="email" placeholder="Please enter your username" id="usernameInput" ng-control="username" [(ng-model)]="username" required autofocus></span>
     </div>
     <div>
         <label for="passwordInput" form="signin-form">Password</label>
-        <input type="password" placeholder="Please enter your password" id="passwordInput" ng-control="password" [(ng-model)]="password" required>
+        <br>
+        <span><i class="fa fa-key"></i> <input type="password" placeholder="Please enter your password" id="passwordInput" ng-control="password" [(ng-model)]="password" required></span>
     </div>
-    <button type="submit" [disabled]="!f.form.valid" class="button">Login</button>
+    <button type="submit" [disabled]="!f.form.valid"><i class="fa fa-sign-in"></i> Login</button>
 </form>

@@ -1,6 +1,7 @@
 {
-    "version": "1.0.1",
     "dburl": "mongodb://localhost:27017/inventman",
-    "secret": "jhfsdjlhsdblajbsclajbsdclb3r546t345t234sdfjhvjhv",
-    "bigcommerceauth": "ZGViOmRkMDA3ZmQzMTdiNzRiZWQwYmNjZDdhMmFiODhiNWQwMDJkYjJlMjk="
+    "secret": "dsfgljhabsdfub#@$%@34523452345@#$%$dsfjgkbsdfgjb%^&$%^&:!@#sdfkjbaskdjfbsakdjfbksdjbpokopqa",
+    "bigcommerceauth": "",
+    "path_gapi_key": "../keys/inventman GT-8340f3e0f449.json",
+    "spreadsheet_id": ""
 }

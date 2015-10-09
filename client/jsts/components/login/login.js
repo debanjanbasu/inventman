@@ -16,29 +16,33 @@ var router_1 = require('angular2/router');
 var LoginApp = (function () {
     function LoginApp(router) {
         this.router = router;
-        Waves.attach('.button', ['waves-button']);
-        Waves.init();
     }
     LoginApp.prototype.onSubmit = function () {
         var _this = this;
         window.fetch('https://' + location.host + '/userapi/sessions/create', {
             method: 'POST',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'text/plain',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username: this.username, password: this.password })
         }).then(function (response) {
-            return response.json();
-        }).then(function (json) {
-            if (json.message) {
-                alert(json.message);
+            return response.text();
+        }).then(function (message) {
+            if (message == 'fail') {
+                alert('Something serious went wrong');
+                localStorage.removeItem('jwt');
             }
-            else if (json.id_token) {
-                localStorage.setItem('jwt', json.id_token);
-                _this.router.navigate('/dashboard');
+            else if (message == "Wrong password provided" || message == "No such user exists") {
+                alert(message);
+                localStorage.removeItem('jwt');
+            }
+            else {
+                localStorage.setItem('jwt', message);
+                _this.router.navigateByUrl('/dashboard');
             }
         }).catch(function (error) {
+            localStorage.removeItem('jwt');
             console.log(error.message);
         });
     };

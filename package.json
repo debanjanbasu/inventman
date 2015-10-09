@@ -1,29 +1,29 @@
 {
     "name": "inventman",
-    "version": "1.0.1",
-    "description": "Real-Time smart inventory Management and Prediction",
+    "version": "1.0.2",
+    "description": "Realtime inventory and sales management system with active prediction",
     "main": "server/server.js",
-    "author": "Debanjan Basu",
     "scripts": {
-        "start": "node --harmony --harmony_generators server/server.js",
-        "updatets": "npm install -g typescript@next"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
+    "author": "Debanjan Basu",
     "dependencies": {
-        "bcrypt-nodejs": "latest",
-        "body-parser": "latest",
+        "bcrypt": "latest",
         "cluster": "latest",
-        "compression": "latest",
-        "cors": "latest",
-        "express": "latest",
-        "express-jwt": "latest",
+        "google-spreadsheet": "latest",
         "jsonwebtoken": "latest",
-        "mongoose": "latest",
+        "koa": "latest",
+        "koa-bodyparser": "latest",
+        "koa-compress": "latest",
+        "koa-cors": "latest",
+        "koa-jwt": "latest",
+        "koa-router": "latest",
+        "koa-static": "latest",
+        "mongodb": "latest",
         "node-fetch": "latest",
+        "promisify-any": "latest",
         "spdy": "latest"
     },
     "license": "UNLICENSED",
-    "private": true,
-    "engines": {
-        "node": "^0.12.7"
-    }
+    "private": true
 }

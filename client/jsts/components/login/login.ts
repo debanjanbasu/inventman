@@ -14,31 +14,40 @@ export class LoginApp {
 	username: String;
 	password: String;
 	constructor(public router: Router) {
-		Waves.attach('.button', ['waves-button']);
-		Waves.init();
 	}
 	onSubmit() {
 		// request using the fetch api as it is a part of new es6
 		window.fetch('https://' + location.host + '/userapi/sessions/create', {
 			method: 'POST',
 			headers: {
-				'Accept': 'application/json',
+				'Accept': 'text/plain',
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({ username: this.username, password: this.password })
 		}).then(response => {
-			// convert to JSON
-			return response.json();
-		}).then(json => {
-			if (json.message) {
-				alert(json.message);
-			} else if (json.id_token) {
+			// convert to Text
+			return response.text();
+		}).then(message => {
+			if (message == 'fail') {
+				alert('Something serious went wrong');
+				// remove jwt for security purpose
+				localStorage.removeItem('jwt');
+			}
+			else if (message == "Wrong password provided" || message == "No such user exists") {
+				alert(message);
+				// remove jwt for security purpose
+				localStorage.removeItem('jwt');
+			}
+			else {
 				// store the jwt
-				localStorage.setItem('jwt', json.id_token);
+				localStorage.setItem('jwt', message);
 				// navigate to the dashboard
-				this.router.navigate('/dashboard');
+				this.router.navigateByUrl('/dashboard');
 			}
 		}).catch(error=> {
+			// remove jwt for security purpose
+			localStorage.removeItem('jwt');
+			// log the error message
 			console.log(error.message);
 		});
 	}

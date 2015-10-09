@@ -1,0 +1,15 @@
+.gridster {
+    top: 30px;
+}
+
+.gridster * {
+    margin: 0;
+    padding: 0;
+}
+
+.gridster .gs-w {
+    background: #fcfcfc;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 10px;
+}

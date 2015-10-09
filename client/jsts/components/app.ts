@@ -1,7 +1,7 @@
 /// <reference path="../typings/angular2/angular2.d.ts" />
 'use strict';
-import {Component, View, bootstrap} from 'angular2/angular2';
-import {RouteConfig, Router, RouterOutlet, ROUTER_BINDINGS} from 'angular2/router';
+import {Component, View, bootstrap, bind} from 'angular2/angular2';
+import {RouteConfig, Router, ROUTER_DIRECTIVES, APP_BASE_HREF, routerBindings, LocationStrategy, PathLocationStrategy} from 'angular2/router';
 import {LoginApp} from './login/login';
 import {DashboardApp} from './dashboard/dashboard';
 // Annotation section
@@ -9,14 +9,13 @@ import {DashboardApp} from './dashboard/dashboard';
     selector: 'inventman-app'
 })
 @View({
-    template: `<!-- The router-outlet displays the template for the current component based on the URL -->
-    <router-outlet></router-outlet>`,
-    directives: [RouterOutlet]
+	template: '<router-outlet></router-outlet>',
+	directives: [ROUTER_DIRECTIVES]
 })
 @RouteConfig([
 	// { path: '/', redirectTo: '/login' },
-	{ path: '/dashboard', as: 'dashboard-app', component: DashboardApp },
-	{ path: '/login', as: 'login-app', component: LoginApp }
+	{ path: '/dashboard', as: 'DashboardCmp', component: DashboardApp },
+	{ path: '/login', as: 'LoginCmp', component: LoginApp }
 ])
 // Component controller
 class InventmanApp {
@@ -28,29 +27,37 @@ class InventmanApp {
 			window.fetch('https://' + location.host + '/inventmanapi/me', {
 				method: 'GET',
 				headers: {
-					'Accept': 'application/json',
+					'Accept': 'text/plain',
 					'Content-Type': 'application/json',
 					'Authorization': 'Bearer ' + jwt
 				}
 			}).then(response => {
-				// convert to JSON
-				return response.json();
-			}).then(json => {
-				if (json.username) {
+				// convert to Text
+				return response.text();
+			}).then(message => {
+				if (message == "success") {
 					// this is a valid user
-					this.router.navigate('/dashboard');
+					this.router.navigateByUrl('/dashboard');
+				}
+				else {
+					// Invalid Token
+					console.log(message);
+					// remove jwt for security purpose
+					localStorage.removeItem('jwt');
+					// navigate to login
+					this.router.navigateByUrl('/login');
 				}
 			}).catch(error=> {
 				console.log(error.message);
 				// remove jwt for security purpose
 				localStorage.removeItem('jwt');
 				// navigate to login
-				this.router.navigate('/login');
+				this.router.navigateByUrl('/login');
 			});
 		}
 		else {
 			// there is no jwt at all so navigate to login
-			this.router.navigate('/login');
+			this.router.navigateByUrl('/login');
 			// remove the JWT
 			localStorage.removeItem('jwt');
 		}
@@ -59,4 +66,6 @@ class InventmanApp {
 
 // bootstrap the Main App
 bootstrap(InventmanApp, [
-	ROUTER_BINDINGS]);
+	routerBindings(InventmanApp),
+	bind(LocationStrategy).toClass(PathLocationStrategy),
+	bind(APP_BASE_HREF).toValue('/')]);

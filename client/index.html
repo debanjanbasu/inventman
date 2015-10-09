@@ -3,15 +3,16 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Inventman v1.0.1. Real-Time smart inventory Management and Prediction</title>
+    <title>Inventman v1.0.2 Real-Time smart inventory Management and Prediction</title>
     <meta name="description" content="Real-Time smart inventory Management and Prediction">
     <meta name="author" content="Debanjan Basu">
     <base href="/">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.2/waves.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet'>
+    <link rel="stylesheet" href="css/sanfranciscofont.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.gridster/0.5.6/jquery.gridster.min.css">
+    <link rel="stylesheet" href="bower_components/amstock3/amcharts/plugins/export/export.css">
+    <link rel="stylesheet" href="bower_components/amcharts3/amcharts/plugins/export/export.css">
     <link rel="stylesheet" href="css/custom.css">
 </head>
 
@@ -21,7 +22,7 @@
     </inventman-app>
     <!--Load AngularJS-->
     <script src="bower_components/traceur-runtime/traceur-runtime.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.18.4/system.src.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.18.4/system.js"></script>
     <script>
     'use strict';
     System.config({
@@ -29,9 +30,20 @@
         baseURL: '/'
     });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.gridster/0.5.6/jquery.gridster.min.js"></script>
+    <!-- this is the amstock part -->
+    <script src="bower_components/amstock3/amcharts/amcharts.js"></script>
+    <script src="bower_components/amstock3/amcharts/serial.js"></script>
+    <script src="bower_components/amstock3/amcharts/amstock.js"></script>
+    <script src="bower_components/amstock3/amcharts/plugins/export/export.min.js"></script>
+    <!-- this is the amcharts part -->
+    <script src="bower_components/amcharts3/amcharts/amcharts.js"></script>
+    <script src="bower_components/amcharts3/amcharts/pie.js"></script>
+    <script src="bower_components/amcharts3/amcharts/plugins/export/export.min.js"></script>
+    <!-- this is the angular part -->
     <script src="jsts/lib/angular2.js"></script>
     <script src="jsts/lib/router.dev.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/node-waves/0.7.2/waves.min.js"></script>
     <script>
     'use strict';
     System.import('./jsts/components/app');

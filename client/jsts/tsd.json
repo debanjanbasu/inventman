@@ -6,25 +6,22 @@
     "bundle": "typings/tsd.d.ts",
     "installed": {
         "angular2/angular2.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
-        },
-        "rx/rx.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
-        },
-        "rx/rx-lite.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
         },
         "angular2/router.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
         },
         "whatwg-fetch/whatwg-fetch.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
         },
-        "d3/d3.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
+        "jquery/jquery.d.ts": {
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
+        },
+        "es6-shim/es6-shim.d.ts": {
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
         },
         "es6-promise/es6-promise.d.ts": {
-            "commit": "d9fea91e842c2cf5bd0f7d861ac378e571d2ad7c"
+            "commit": "66f88ec51858bb21bc375fa91a963c04bc09401e"
         }
     }
 }

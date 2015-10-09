@@ -1,6 +1,17 @@
-<nav id="dashboard-nav">
+<nav>
     <ul>
-        <li><a href="javascript:void(0);" (click)="logOut()" class="button">Log Out</a></li>
-        <li><a href="javascript:void(0);" (click)="forceSyncDB()" class="button">Force Sync DB</a></li>
+        <li><a href="javascript:void(0);" (click)="logOut()"><i class="fa fa-sign-out"></i> Log Out</a></li>
+        <li><a href="javascript:void(0);" (click)="forceSyncDB()"><i class="fa" [ng-class]="classMap1"></i> Force Sync Mongo DB</a></li>
+        <li><a href="javascript:void(0);" (click)="forceSyncGSheet()"><i class="fa" [ng-class]="classMap2"></i> Force Sync Google Spreadsheet</a></li>
     </ul>
 </nav>
+<div class="gridster">
+    <ul>
+        <li data-row="1" data-col="1" data-sizex="7" data-sizey="4">
+            <salesforce-widget></salesforce-widget>
+        </li>
+        <li data-row="1" data-col="8" data-sizex="5" data-sizey="3">
+            <topsales-widget></topsales-widget>
+        </li>
+    </ul>
+</div>

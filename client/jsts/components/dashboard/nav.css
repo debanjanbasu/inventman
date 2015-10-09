@@ -1,0 +1,29 @@
+nav ul,
+nav ul li {
+    float: right
+}
+
+nav {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000000;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li:last-child a {
+    border-radius: 0 0 0 5px
+}
+
+nav * {
+    color: #fff
+}
+
+nav ul li a {
+    background-color: #551A8B;
+    padding: 5px 10px;
+    line-height: 24px
+}
